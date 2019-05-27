@@ -129,7 +129,13 @@ public abstract class AnnotationSchema {
     }
     
     final HttpPost post = new HttpPost(uri.toString());
+    post.setHeader("Content-Type", "application/json");
     post.setEntity(new ByteArrayEntity(JSON.serializeToBytes(note)));
+    if(LOG.isDebugEnabled()){
+      LOG.debug("post meta note {} to uri:{}, ",
+              note.toString(),
+              uri.toString());
+    }
     es.httpClient().execute(post, new AsyncCB());
     return result;
   }
@@ -164,6 +170,11 @@ public abstract class AnnotationSchema {
                 + " Content: " + EntityUtils.toString(content.getEntity())));
             errors_ctr.increment();
           } else {
+            if(LOG.isDebugEnabled()){
+              LOG.debug("post meta data."+ "Status code: {}  Content: {}",
+                      content.getStatusLine().getStatusCode(),
+                      EntityUtils.toString(content.getEntity()));
+            }
             result.callback(true);
             deleted_ctr.increment();
           } 

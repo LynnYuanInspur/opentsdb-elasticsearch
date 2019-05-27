@@ -325,6 +325,7 @@ public final class ElasticSearch extends SearchPlugin {
     qs.put("query_string", query_string);
 
     final HttpPost post = new HttpPost(uri.toString());
+    post.setHeader("Content-Type", "application/json");
     post.setEntity(new ByteArrayEntity(JSON.serializeToBytes(body)));
 
     http_client.execute(post, new SearchCB(query, result));

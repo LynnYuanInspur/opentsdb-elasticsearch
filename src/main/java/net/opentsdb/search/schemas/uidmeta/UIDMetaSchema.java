@@ -96,6 +96,11 @@ public abstract class UIDMetaSchema {
                 + " Content: " + EntityUtils.toString(content.getEntity())));
             errors_ctr.increment();
           } else {
+            if(LOG.isDebugEnabled()){
+              LOG.debug("post meta data."+ "Status code: {}  Content: {}",
+                      content.getStatusLine().getStatusCode(),
+                      EntityUtils.toString(content.getEntity()));
+            }
             result.callback(true);
             added_ctr.increment();
           } 
@@ -123,13 +128,21 @@ public abstract class UIDMetaSchema {
       .append("/")
       .append(doc_type)
       .append("/")
-      .append(meta.getUID());
+      .append(meta.getUID()); //uid as doc_index, when tagk, tagv and metric has the same uid,
+    // the data which send to es ealier will be overrided by the lastest.
+
     if (es.asyncReplication()) {
       uri.append("?replication=async");
     }
     
     final HttpPost post = new HttpPost(uri.toString());
+    post.setHeader("Content-Type", "application/json");
     post.setEntity(new ByteArrayEntity(JSON.serializeToBytes(meta)));
+    if(LOG.isDebugEnabled()){
+      LOG.debug("post meta data {} to uri:{}, ",
+              meta.toString(),
+              uri.toString());
+    }
     es.httpClient().execute(post, new AsyncCB());
     return result;
   }

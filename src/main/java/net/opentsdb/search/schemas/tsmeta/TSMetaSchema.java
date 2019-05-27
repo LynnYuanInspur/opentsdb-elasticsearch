@@ -144,6 +144,11 @@ public abstract class TSMetaSchema {
                 + " Content: " + EntityUtils.toString(content.getEntity())));
             errors_ctr.increment();
           } else {
+            if(LOG.isDebugEnabled()){
+              LOG.debug("post meta data."+ "Status code: {}  Content: {}",
+                      content.getStatusLine().getStatusCode(),
+                      EntityUtils.toString(content.getEntity()));
+            }
             result.callback(true);
             added_ctr.increment();
           } 
@@ -177,7 +182,13 @@ public abstract class TSMetaSchema {
     }
     
     final HttpPost post = new HttpPost(uri.toString());
+    post.setHeader("Content-Type", "application/json");
     post.setEntity(new ByteArrayEntity(JSON.serializeToBytes(meta)));
+    if(LOG.isDebugEnabled()){
+      LOG.debug("post tsmeta data {} to uri:{}, ",
+              meta.toString(),
+              uri.toString());
+    }
     es.httpClient().execute(post, new AsyncCB());
     return result;
   }
