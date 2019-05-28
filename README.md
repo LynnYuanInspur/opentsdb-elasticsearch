@@ -24,10 +24,7 @@ Search plugin for OpenTSDB
   (NOTE: It's important to do this BEFORE starting a TSD that would index data as you can't modify the mappings for documents that have already been indexed [afaik])
 
 ```  
-  curl -X PUT -d @schemas/simple/opentsdb_index.json http://<eshost>/opentsdb/
-  curl -X PUT -d @schemas/simple/tsmeta_mapping.json http://<eshost>/opentsdb/tsmeta/_mapping
-  curl -X PUT -d @schemas/simple/uidmeta_mapping.json http://<eshost>/opentsdb/uidmeta/_mapping
-  curl -X PUT -d @schemas/simple/annotation_mapping.json http://<eshost>/opentsdb/annotation/_mapping
+  curl -X PUT -d @schemas/opentsdb_index.json http://<eshost>/opentsdb/
 ```
 
 * Optionally add ``tsd.core.meta.enable_tracking = true`` to your TSD config if it's processing incoming data
