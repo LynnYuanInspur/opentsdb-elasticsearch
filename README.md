@@ -33,4 +33,17 @@ Search plugin for OpenTSDB
 
 ## Schemas
 
+* Add the following configs to your ``opentsdb.conf``file.
+  * Add ``tsd.search.elasticsearch.index = tsdb`` the index of documents
+  * Add ``tsd.search.elasticsearch.type = meta``  the type of documents
+  * Add ``tsd.search.elasticsearch.uidmeta_type = uidmeta``
+  * Add ``tsd.search.elasticsearch.tsmeta_type = tsmeta``
+  * Add ``tsd.search.elasticsearch.annotation_type = annotation``
+
+* The rule of generate document id as follows.
+  * uidmeta: document_id = uidmeta+(metric|tagk|tagv)+uid
+  * tsmeta: document_id = tsmeta+tsuid
+  * annotation: document_id = annotation+ts[+tsuid]
+ 
+  
 TODO - doc em
