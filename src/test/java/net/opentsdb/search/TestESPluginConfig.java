@@ -27,6 +27,7 @@ public class TestESPluginConfig {
     assertEquals("", config.getString("tsd.search.elasticsearch.hosts"));
     assertEquals(1, config.getInt("tsd.search.elasticsearch.index_threads"));
     assertEquals("opentsdb", config.getString("tsd.search.elasticsearch.index"));
+    assertEquals("meta", config.getString("tsd.search.elasticsearch.type"));
     assertEquals("tsmeta", config.getString("tsd.search.elasticsearch.tsmeta_type"));
     assertEquals("uidmeta", config.getString("tsd.search.elasticsearch.uidmeta_type"));
     assertEquals("annotation", config.getString("tsd.search.elasticsearch.annotation_type"));

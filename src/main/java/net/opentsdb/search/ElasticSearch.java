@@ -123,7 +123,7 @@ public final class ElasticSearch extends SearchPlugin {
     ioReactorConfigBuilder.setSoKeepAlive(true);
     ioReactorConfigBuilder.setSoLinger(-1);
     ioReactorConfigBuilder.setSoReuseAddress(false);
-    ioReactorConfigBuilder.setSoTimeout(1000);
+    ioReactorConfigBuilder.setSoTimeout(1000);  //1000ms
     ioReactorConfigBuilder.setTcpNoDelay(false);
 
     try {

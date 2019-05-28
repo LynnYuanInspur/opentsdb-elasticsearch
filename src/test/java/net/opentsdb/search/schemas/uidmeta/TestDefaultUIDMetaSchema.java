@@ -68,7 +68,7 @@ public class TestDefaultUIDMetaSchema {
     es = mock(ElasticSearch.class);
     meta = new UIDMeta(UniqueIdType.METRIC, new byte[] { 1 }, "sys.cpu.user");
     index = config.getString("tsd.search.elasticsearch.index");
-    doc_type = config.getString("tsd.search.elasticsearch.uidmeta_type");
+    doc_type = config.getString("tsd.search.elasticsearch.type");
     
     when(es.httpClient()).thenReturn(client);
     when(es.host()).thenReturn(HOST);
@@ -91,7 +91,7 @@ public class TestDefaultUIDMetaSchema {
     DefaultUIDMetaSchema schema = new DefaultUIDMetaSchema(es);
     assertEquals(doc_type, schema.docType());
     
-    config.overrideConfig("tsd.search.elasticsearch.uidmeta_type", null);
+    config.overrideConfig("tsd.search.elasticsearch.type", null);
     try {
       new DefaultUIDMetaSchema(es);
       fail("Expected IllegalArgumentException");
@@ -106,7 +106,7 @@ public class TestDefaultUIDMetaSchema {
       deferred.join(1);
       fail("Expected TimeoutException");
     } catch (TimeoutException e) { }
-    assertEquals(HOST + "/" + index + "/" + doc_type + "/01", 
+    assertEquals(HOST + "/" + index + "/" + doc_type + "/uidmetametric01",
         request.getURI().toString());
     
     // good
@@ -117,7 +117,7 @@ public class TestDefaultUIDMetaSchema {
     // good with async
     when(es.asyncReplication()).thenReturn(true);
     deferred = schema.index(meta);
-    assertEquals(HOST + "/" + index + "/" + doc_type + "/01?replication=async", 
+    assertEquals(HOST + "/" + index + "/" + doc_type + "/uidmetametric01?replication=async",
         request.getURI().toString());
     final String payload = EntityUtils.toString(((HttpPost) request)
         .getEntity());
@@ -166,7 +166,7 @@ public class TestDefaultUIDMetaSchema {
       deferred.join(1);
       fail("Expected TimeoutException");
     } catch (TimeoutException e) { }
-    assertEquals(HOST + "/" + index + "/" + doc_type + "/01", 
+    assertEquals(HOST + "/" + index + "/" + doc_type + "/uidmetametric01",
         request.getURI().toString());
     
     // good
@@ -177,7 +177,7 @@ public class TestDefaultUIDMetaSchema {
     // good with async
     when(es.asyncReplication()).thenReturn(true);
     deferred = schema.delete(meta);
-    assertEquals(HOST + "/" + index + "/" + doc_type + "/01?replication=async",
+    assertEquals(HOST + "/" + index + "/" + doc_type + "/uidmetametric01?replication=async",
         request.getURI().toString());
     
     // bad

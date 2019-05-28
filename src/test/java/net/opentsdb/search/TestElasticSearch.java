@@ -147,7 +147,14 @@ public class TestElasticSearch {
     final ElasticSearch plugin = new ElasticSearch();
     plugin.initialize(tsdb);
   }
-  
+
+  @Test (expected = IllegalArgumentException.class)
+  public void initializeMisingMeta()throws Exception {
+    config.overrideConfig("tsd.search.elasticsearch.type", "");
+    final ElasticSearch plugin = new ElasticSearch();
+    plugin.initialize(tsdb);
+  }
+
   @Test (expected = IllegalArgumentException.class)
   public void initializeMisingTSmega() throws Exception {
     config.overrideConfig("tsd.search.elasticsearch.tsmeta_type", "");

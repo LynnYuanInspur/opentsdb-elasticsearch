@@ -71,7 +71,7 @@ public class TestDefaultAnnotationSchema {
     note.setStartTime(1483228800);
     
     index = config.getString("tsd.search.elasticsearch.index");
-    doc_type = config.getString("tsd.search.elasticsearch.annotation_type");
+    doc_type = config.getString("tsd.search.elasticsearch.type");
     
     when(es.httpClient()).thenReturn(client);
     when(es.host()).thenReturn(HOST);
@@ -94,7 +94,7 @@ public class TestDefaultAnnotationSchema {
     DefaultAnnotationSchema schema = new DefaultAnnotationSchema(es);
     assertEquals(doc_type, schema.docType());
     
-    config.overrideConfig("tsd.search.elasticsearch.annotation_type", null);
+    config.overrideConfig("tsd.search.elasticsearch.type", null);
     try {
       new DefaultAnnotationSchema(es);
       fail("Expected IllegalArgumentException");
@@ -109,7 +109,7 @@ public class TestDefaultAnnotationSchema {
       deferred.join(1);
       fail("Expected TimeoutException");
     } catch (TimeoutException e) { }
-    assertEquals(HOST + "/" + index + "/" + doc_type + "/1483228800010101", 
+    assertEquals(HOST + "/" + index + "/" + doc_type + "/annotation1483228800010101",
         request.getURI().toString());
     
     // good
@@ -121,7 +121,7 @@ public class TestDefaultAnnotationSchema {
     when(es.asyncReplication()).thenReturn(true);
     deferred = schema.index(note);
     assertEquals(HOST + "/" + index + "/" + doc_type 
-        + "/1483228800010101?replication=async", request.getURI().toString());
+        + "/annotation1483228800010101?replication=async", request.getURI().toString());
     final String payload = EntityUtils.toString(((HttpPost) request)
         .getEntity());
     assertTrue(payload.contains("\"description\":\"Unit testing Dragonstone!\""));
@@ -134,7 +134,7 @@ public class TestDefaultAnnotationSchema {
     note.setStartTime(1483228800);
     deferred = schema.index(note);
     assertEquals(HOST + "/" + index + "/" + doc_type 
-        + "/1483228800?replication=async", request.getURI().toString());
+        + "/annotation1483228800?replication=async", request.getURI().toString());
     
     // bad
     deferred = schema.index(note);
@@ -178,7 +178,7 @@ public class TestDefaultAnnotationSchema {
       deferred.join(1);
       fail("Expected TimeoutException");
     } catch (TimeoutException e) { }
-    assertEquals(HOST + "/" + index + "/" + doc_type + "/1483228800010101", 
+    assertEquals(HOST + "/" + index + "/" + doc_type + "/annotation1483228800010101",
         request.getURI().toString());
     
     // good
@@ -190,7 +190,7 @@ public class TestDefaultAnnotationSchema {
     when(es.asyncReplication()).thenReturn(true);
     deferred = schema.delete(note);
     assertEquals(HOST + "/" + index + "/" + doc_type + 
-        "/1483228800010101?replication=async",request.getURI().toString());
+        "/annotation1483228800010101?replication=async",request.getURI().toString());
     
     // bad
     deferred = schema.delete(note);

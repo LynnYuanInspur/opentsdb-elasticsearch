@@ -82,7 +82,7 @@ public class TestAnalyzedAndMappedTSMetaSchema {
         "web01");
     Whitebox.setInternalState(meta, "tags", Lists.newArrayList(tagk, tagv));
     index = config.getString("tsd.search.elasticsearch.index");
-    doc_type = config.getString("tsd.search.elasticsearch.tsmeta_type");
+    doc_type = config.getString("tsd.search.elasticsearch.type");
     
     when(es.httpClient()).thenReturn(client);
     when(es.host()).thenReturn(HOST);
@@ -115,7 +115,7 @@ public class TestAnalyzedAndMappedTSMetaSchema {
       deferred.join(1);
       fail("Expected TimeoutException");
     } catch (TimeoutException e) { }
-    assertEquals(HOST + "/" + index + "/" + doc_type + "/010101", 
+    assertEquals(HOST + "/" + index + "/" + doc_type + "/tsmeta010101",
         request.getURI().toString());
     final String payload = EntityUtils.toString(((HttpPost) request)
         .getEntity());
@@ -138,7 +138,7 @@ public class TestAnalyzedAndMappedTSMetaSchema {
     when(es.asyncReplication()).thenReturn(true);
     deferred = schema.index(meta);
     assertEquals(HOST + "/" + index + "/" + doc_type 
-        + "/010101?replication=async", request.getURI().toString());
+        + "/tsmeta010101?replication=async", request.getURI().toString());
     
     // bad
     deferred = schema.index(meta);
@@ -182,7 +182,7 @@ public class TestAnalyzedAndMappedTSMetaSchema {
       deferred.join(1);
       fail("Expected TimeoutException");
     } catch (TimeoutException e) { }
-    assertEquals(HOST + "/" + index + "/" + doc_type + "/010101", 
+    assertEquals(HOST + "/" + index + "/" + doc_type + "/tsmeta010101",
         request.getURI().toString());
     
     // good
@@ -194,7 +194,7 @@ public class TestAnalyzedAndMappedTSMetaSchema {
     when(es.asyncReplication()).thenReturn(true);
     deferred = schema.delete("010101");
     assertEquals(HOST + "/" + index + "/" + doc_type 
-        + "/010101?replication=async", request.getURI().toString());
+        + "/tsmeta010101?replication=async", request.getURI().toString());
     
     // bad
     deferred = schema.delete("010101");

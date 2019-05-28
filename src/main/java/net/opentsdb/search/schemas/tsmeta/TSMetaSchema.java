@@ -15,6 +15,7 @@ package net.opentsdb.search.schemas.tsmeta;
 import java.io.IOException;
 import java.util.concurrent.CancellationException;
 
+import net.opentsdb.search.schemas.MetaDoc;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpPost;
@@ -86,13 +87,16 @@ import net.opentsdb.utils.JSON;
  */
 public abstract class TSMetaSchema {
   private static final Logger LOG = LoggerFactory.getLogger(TSMetaSchema.class);
-  
+
   /** The parent plugin this belongs to. */
   protected final ElasticSearch es;
   
   /** The type of document used for indexing. */
   protected final String doc_type;
-  
+
+  /** The type of this schema */
+  protected String metaType;
+
   /** Counters for stats */
   protected final Counter added_ctr = new Counter();
   protected final Counter deleted_ctr = new Counter();
@@ -107,13 +111,18 @@ public abstract class TSMetaSchema {
    */
   public TSMetaSchema(final ElasticSearch es) {
     this.es = es;
-    doc_type = es.config().getString("tsd.search.elasticsearch.tsmeta_type");
+    doc_type = es.config().getString("tsd.search.elasticsearch.type");
     if (Strings.isNullOrEmpty(doc_type)) {
       throw new IllegalArgumentException("Missing config "
-          + "'tsd.search.elasticsearch.tsmeta_type'");
+          + "'tsd.search.elasticsearch.type'");
+    }
+    metaType = es.config().getString("tsd.search.elasticsearch.tsmeta_type");
+    if (Strings.isNullOrEmpty(metaType)) {
+      throw new IllegalArgumentException("Missing config "
+              + "'tsd.search.elasticsearch.tsmeta_type'");
     }
   }
-  
+
   /**
    * Sends the data to the Elastic Search index.
    * @param meta A non-null meta object.
@@ -169,21 +178,23 @@ public abstract class TSMetaSchema {
       }
 
     }
-    
+
+    MetaDoc<TSMeta> doc = new MetaDoc<>().withType(metaType).withMeta(meta);
+
     final StringBuilder uri = new StringBuilder(es.host())
       .append("/")
       .append(es.index())
       .append("/")
       .append(doc_type)
       .append("/")
-      .append(meta.getTSUID());
+      .append(metaType+meta.getTSUID());
     if (es.asyncReplication()) {
       uri.append("?replication=async");
     }
     
     final HttpPost post = new HttpPost(uri.toString());
     post.setHeader("Content-Type", "application/json");
-    post.setEntity(new ByteArrayEntity(JSON.serializeToBytes(meta)));
+    post.setEntity(new ByteArrayEntity(JSON.serializeToBytes(doc)));
     if(LOG.isDebugEnabled()){
       LOG.debug("post tsmeta data {} to uri:{}, ",
               meta.toString(),
@@ -250,7 +261,7 @@ public abstract class TSMetaSchema {
       .append("/")
       .append(doc_type)
       .append("/")
-      .append(tsuid);
+      .append(metaType+tsuid);
     if (es.asyncReplication()) {
       uri.append("?replication=async");
     }
@@ -261,7 +272,7 @@ public abstract class TSMetaSchema {
     return result;
   }
   
-  /** @return The doc type configured in 'tsd.search.elasticsearch.tsmeta_type' */
+  /** @return The doc type configured in 'tsd.search.elasticsearch.type' */
   public String docType() {
     return doc_type;
   }

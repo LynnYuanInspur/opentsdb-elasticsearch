@@ -35,13 +35,16 @@ import net.opentsdb.utils.JSON;
 public abstract class AnnotationSchema {
   private static final Logger LOG = LoggerFactory.getLogger(
       AnnotationSchema.class);
-  
+
   /** The parent plugin this belongs to. */
   protected final ElasticSearch es;
   
   /** The type of document used for indexing. */
   protected final String doc_type;
-  
+
+  /** The type of this schema */
+  protected String metaType;
+
   /** Counters for stats */
   protected final Counter added_ctr = new Counter();
   protected final Counter deleted_ctr = new Counter();
@@ -51,15 +54,20 @@ public abstract class AnnotationSchema {
    * Default ctor. All implementations must have this CTOR as we'll call that
    * based on the class given in the config.
    * @param es The plugin this schema belongs to.
-   * @throws IllegalArgumentException if 'tsd.search.elasticsearch.annotation_type'
+   * @throws IllegalArgumentException if 'tsd.search.elasticsearch.type'
    * was null or empty.
    */
   public AnnotationSchema(final ElasticSearch es) {
     this.es = es;
-    doc_type = es.config().getString("tsd.search.elasticsearch.annotation_type");
+    doc_type = es.config().getString("tsd.search.elasticsearch.type");
     if (Strings.isNullOrEmpty(doc_type)) {
       throw new IllegalArgumentException("Missing config "
-          + "'tsd.search.elasticsearch.annotation_type'");
+          + "'tsd.search.elasticsearch.type'");
+    }
+    metaType = es.config().getString("tsd.search.elasticsearch.annotation_type");
+    if (Strings.isNullOrEmpty(metaType)) {
+      throw new IllegalArgumentException("Missing config "
+              + "'tsd.search.elasticsearch.annotation_type'");
     }
   }
   
@@ -120,7 +128,7 @@ public abstract class AnnotationSchema {
       .append("/")
       .append(doc_type)
       .append("/")
-      .append(note.getStartTime());
+      .append(metaType +note.getStartTime());
     if (!Strings.isNullOrEmpty(note.getTSUID())) {
       uri.append(note.getTSUID());
     }
@@ -202,7 +210,7 @@ public abstract class AnnotationSchema {
       .append("/")
       .append(doc_type)
       .append("/")
-      .append(note.getStartTime());
+      .append(metaType +note.getStartTime());
     if (!Strings.isNullOrEmpty(note.getTSUID())) {
       uri.append(note.getTSUID());
     }
@@ -215,7 +223,7 @@ public abstract class AnnotationSchema {
     return result;
   }
   
-  /** @return The doc type configured in 'tsd.search.elasticsearch.annotation_type' */
+  /** @return The doc type configured in 'tsd.search.elasticsearch.type' */
   public String docType() {
     return doc_type;
   }

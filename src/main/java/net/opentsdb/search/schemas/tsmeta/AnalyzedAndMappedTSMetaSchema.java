@@ -167,7 +167,7 @@ public class AnalyzedAndMappedTSMetaSchema extends TSMetaSchema {
       .append("/")
       .append(doc_type)
       .append("/")
-      .append(meta.getTSUID());
+      .append(metaType+meta.getTSUID());
     if (es.asyncReplication()) {
       uri.append("?replication=async");
     }

@@ -38,6 +38,7 @@ public final class ESPluginConfig extends Config {
     default_map.put("tsd.search.elasticsearch.hosts", "");
     default_map.put("tsd.search.elasticsearch.index_threads", "1");
     default_map.put("tsd.search.elasticsearch.index", "opentsdb");
+    default_map.put("tsd.search.elasticsearch.type", "meta");
     default_map.put("tsd.search.elasticsearch.tsmeta_type", "tsmeta");
     default_map.put("tsd.search.elasticsearch.uidmeta_type", "uidmeta");
     default_map.put("tsd.search.elasticsearch.annotation_type", "annotation");
