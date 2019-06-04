@@ -47,6 +47,6 @@ Search plugin for OpenTSDB
  
 ## HttpRpcPlugin
 * Add ``net.opentsdb.tsd.SearchHttpRpcPlugin`` to transfer the request to ElasticSearch host.
-``/plugin/search/index`` transfer the request to ElasticSearch. Support GET or POST Request, The request body and response, please read the EalsticSearch documents.
-``/plugin/search/version`` return the plugin version.
+  * ``/plugin/search/index`` transfer the request to ElasticSearch. Support GET or POST Request, The request body and response, please read the EalsticSearch documents.
+  * ``/plugin/search/version`` return the plugin version.
 TODO - doc em
