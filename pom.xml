@@ -177,6 +177,7 @@
                 <configuration>
                     <services>
                         <param>net.opentsdb.search.SearchPlugin</param>
+                        <param>net.opentsdb.tsd.HttpRpcPlugin</param>
                     </services>
                 </configuration>
                 <executions>
