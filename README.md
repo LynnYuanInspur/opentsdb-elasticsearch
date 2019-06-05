@@ -46,6 +46,8 @@ Search plugin for OpenTSDB
   * annotation: document_id = annotation+ts[+tsuid]
  
 ## HttpRpcPlugin
+* Add the following configs to your ``opentsdb.conf``file.
+    * Add ``tsd.search.plugin = net.opentsdb.tsd.SearchHttpRpcPlugin`` 
 * Add ``net.opentsdb.tsd.SearchHttpRpcPlugin`` to transfer the request to ElasticSearch host.
   * ``/plugin/search/index`` transfer the request to ElasticSearch. Support GET or POST Request, The request body and response, please read the EalsticSearch documents.
   * ``/plugin/search/version`` return the plugin version.
