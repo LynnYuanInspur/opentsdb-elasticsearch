@@ -58,7 +58,7 @@ import com.stumbleupon.async.Deferred;
 
 public final class ElasticSearch extends SearchPlugin {
   private static final Logger LOG = LoggerFactory.getLogger(ElasticSearch.class);
-  
+
   private CloseableHttpAsyncClient http_client;
   private String index = "opentsdb";
   private boolean async_replication;
@@ -88,7 +88,7 @@ public final class ElasticSearch extends SearchPlugin {
   public void initialize(final TSDB tsdb) {
     config = new ESPluginConfig(tsdb.getConfig());
     
-    host = config.getString("tsd.search.elasticsearch.host");
+    host = config.getString("tsd.elasticsearch.host");
     if (Strings.isNullOrEmpty(host)) {
       throw new IllegalArgumentException(
           "Missing config 'tsd.search.elasticsearch.host'");
@@ -295,23 +295,23 @@ public final class ElasticSearch extends SearchPlugin {
 
     final StringBuilder uri = new StringBuilder(host);
     uri.append("/").append(index).append("/");
-    switch(query.getType()) {
-      case TSMETA:
-      case TSMETA_SUMMARY:
-      case TSUIDS:
-        uri.append(ts_meta_schema.docType());
-        break;
-      case UIDMETA:
-        uri.append(uid_meta_schema.docType());
-        break;
-      case ANNOTATION:
-        uri.append(annotation_schema.docType());
-        break;
-      default:
-        return Deferred.fromError(new IllegalArgumentException(
-            "Unhandled query type: " + query.getType()));
-    }
-    uri.append("/_search");
+//    switch(query.getType()) {
+//      case TSMETA:
+//      case TSMETA_SUMMARY:
+//      case TSUIDS:
+//        uri.append(ts_meta_schema.docType());
+//        break;
+//      case UIDMETA:
+//        uri.append(uid_meta_schema.docType());
+//        break;
+//      case ANNOTATION:
+//        uri.append(annotation_schema.docType());
+//        break;
+//      default:
+//        return Deferred.fromError(new IllegalArgumentException(
+//            "Unhandled query type: " + query.getType()));
+//    }
+    uri.append("_search");
 
     // setup the query body
     HashMap<String, Object> body = new HashMap<String, Object>(3);
