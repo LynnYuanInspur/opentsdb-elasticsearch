@@ -88,7 +88,7 @@ public final class ElasticSearch extends SearchPlugin {
   public void initialize(final TSDB tsdb) {
     config = new ESPluginConfig(tsdb.getConfig());
     
-    host = config.getString("tsd.elasticsearch.host");
+    host = config.getString("tsd.search.elasticsearch.host");
     if (Strings.isNullOrEmpty(host)) {
       throw new IllegalArgumentException(
           "Missing config 'tsd.search.elasticsearch.host'");
